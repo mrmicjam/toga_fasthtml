@@ -1,3 +1,5 @@
 python-fasthtml
 toga
 daphne
+pytest
+pytest-asyncio

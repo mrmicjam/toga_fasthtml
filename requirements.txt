@@ -71,12 +71,18 @@ idna==3.10
     #   twisted
 incremental==24.7.2
     # via twisted
+iniconfig==2.1.0
+    # via pytest
 itsdangerous==2.2.0
     # via python-fasthtml
 oauthlib==3.2.2
     # via python-fasthtml
 packaging==25.0
-    # via fastcore
+    # via
+    #   fastcore
+    #   pytest
+pluggy==1.6.0
+    # via pytest
 pyasn1==0.6.1
     # via
     #   pyasn1-modules
@@ -93,6 +99,12 @@ pygobject==3.52.3
     # via toga-gtk
 pyopenssl==25.1.0
     # via twisted
+pytest==8.3.5
+    # via
+    #   -r requirements.in
+    #   pytest-asyncio
+pytest-asyncio==0.26.0
+    # via -r requirements.in
 python-dateutil==2.9.0.post0
     # via python-fasthtml
 python-dotenv==1.1.0
