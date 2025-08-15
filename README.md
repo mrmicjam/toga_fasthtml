@@ -1,7 +1,13 @@
 # toga_fasthtml
-Toga + FastHTML boilerplate app
+Toga + FastHTML boilerplate app with mobile (android tested) support.
 
-This uses daphne as a asgi server internally and the default uvicorn has poor mobile support.
+Key features:
+- Uses a message queue to send events from fastHTML to Toga.
+- runs fastHTML in a background thread using daphne (uvicorn wasn't installable in android)
+- reads from a message queue using an async task
+- uses a forked version of fastHTML that removes uvicorn and apswutils requirements
+
+<img src="Screenshot_1755290642.png" alt="drawing" width="200"/>
 
 ## Installation
 ```
