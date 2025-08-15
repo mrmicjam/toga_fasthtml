@@ -14,13 +14,13 @@ Key features:
 pip install -r requirements.txt
 ```
 
-## Running local desktop
+## Running in local desktop
 ```
 cd helloworld
 python -m briefcase dev
 ```
 
-# Running in android (emulator or device)
+## Running in android (emulator or device)
 ```
 cd helloworld
 
