@@ -8,9 +8,26 @@ This uses daphne as a asgi server internally and the default uvicorn has poor mo
 pip install -r requirements.txt
 ```
 
-## Running
+## Running local desktop
 ```
-python app.py
+cd helloworld
+python -m briefcase dev
+```
+
+# Running in android (emulator or device)
+```
+cd helloworld
+
+# one time initial setup
+python -m briefcase create android   
+
+# each time the code is updated
+python -m briefcase update android 
+
+python -m briefcase build android
+
+# will prompt for either emulator or connected android device
+python -m briefcase run android
 ```
 
 ## Updating the requirements 
@@ -19,7 +36,4 @@ python app.py
 pip install pip-tools
 python -m piptools compile requirements.in
 ```
-
-## TODO
-- [ ] example briefcase android and ios builds
 

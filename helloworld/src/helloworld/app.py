@@ -1,29 +1,18 @@
+"""
+My first application
+"""
+
 import asyncio
 import queue
-from threading import Thread
+import threading
 
-import daphne
 import toga
 from toga.style import Pack
-from toga.style.pack import COLUMN, ROW
 
 from fasthtml_app.main import app, msg_queue
 
 
-def worker():
-    while True:
-        print("blocking for queue get")
-        try:
-            event = msg_queue.get(True, None)
-        except queue.Empty:
-            pass
-        else:
-            print("got item")
-            print(event)
-            the_app.handle_event(event)
-
-
-class FastHTMLApp(toga.App):
+class HelloWorld(toga.App):
     def web_server(self):
         from daphne.endpoints import build_endpoint_description_strings
         from daphne.server import Server
@@ -40,8 +29,18 @@ class FastHTMLApp(toga.App):
         # the runloop
         self.server.run()
 
-    def handle_event(self, event):
-        self.webview.url = "https://dataconcise.com"
+    async def event_handler(self):
+        while True:
+            try:
+                event = msg_queue.get(False, None)
+            except queue.Empty:
+                await asyncio.sleep(0.1)
+            else:
+                await self.handle_event(event)
+
+    async def handle_event(self, event):
+        info_dialog = toga.InfoDialog("Hello from Toga!", "Got event from fasthtml!")
+        await self.main_window.dialog(info_dialog)
 
     def startup(self):
         """Construct and show the Toga application.
@@ -50,9 +49,12 @@ class FastHTMLApp(toga.App):
         We then create a main window (with a name matching the app), and
         show the main window.
         """
-        worker_thread = Thread(target=worker)
-        worker_thread.daemon = True  # makes it so c thread ends when python does
-        worker_thread.start()
+
+        # create an async background task that watches for new events
+        self.background_tasks = set()
+        task = asyncio.create_task(self.event_handler())
+        self.background_tasks.add(task)
+        task.add_done_callback(self.background_tasks.discard)
 
         self.webview = toga.WebView(
             on_webview_load=self.on_webview_loaded, style=Pack(flex=1)
@@ -65,12 +67,12 @@ class FastHTMLApp(toga.App):
 
     def cleanup(self, app, **kwargs):
         print("Shutting down...")
-        self.server.stop()
         return True
 
     def startup_server(self):
         self.server_exists = asyncio.Future()
-        self.server_thread = Thread(target=self.web_server)
+        self.server_thread = threading.Thread(target=self.web_server)
+        self.server_thread.daemon = True  # makes it so c thread ends when python does
         self.server_thread.start()
 
         self.on_exit = self.cleanup
@@ -89,9 +91,4 @@ class FastHTMLApp(toga.App):
 
 
 def main():
-    return FastHTMLApp("FastHTML Toga Example", "com.dataconcise.fasthtml_toga")
-
-
-if __name__ == "__main__":
-    the_app = main()
-    the_app.main_loop()
+    return HelloWorld()
