@@ -3,3 +3,4 @@ toga
 daphne
 pytest
 pytest-asyncio
+briefcase
